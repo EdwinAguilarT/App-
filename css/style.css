@@ -11,6 +11,64 @@ body {
   color: #303133;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+
+header .izq {
+  width: 50%;
+}
+
+header .logo {
+  width: 50%;
+}
+
+header .logo img {
+  max-width: 20rem;
+  max-height: 20rem;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: red;
+  padding: 20px 0;
+}
+
+.menu ul li a {
+  padding: 20px;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+  height: 16rem;
+}
+
+.col {
+  display: flex;
+  flex-direction: row;
+  font-size: 1.5rem;
+  height: 29.7rem;
+  margin: 0 20px;
+}
+
+.col .izq {
+  width: 75%;
+  border-right: 2px solid red;
+}
+
+.col .der {
+  margin-left: 20px;
+  width: 25%;
+  height: 100%;
+}
 
 .login {
   width: 50%;
@@ -70,4 +128,14 @@ body {
 .form input[type="submit"]:active,
 .form input[type="submit"]:focus {
   background: #43a047;
+}
+
+footer {
+  text-align: center;
+  background-color: black;
+  color: white;
+	position: fixed;
+	width: 100%;
+  padding: 30px 0;
+	bottom: 0;
 }

@@ -4,8 +4,61 @@
     <title>Página Principal</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="css/style.css" />
+    <script src="js/myscript.js"></script>
   </head>
   <body>
-    <header></header>
+    <header>
+      <div class="izq">
+        <h1>Proyecto Grupal</h1>
+        <h2>Hostal Royal Princess</h2>
+      </div>
+      <div class="logo">
+        <img src="img/logo.png" alt="logo" />
+      </div>
+    </header>
+
+    <div class="menu">
+      <ul>
+        <li><a onclick="showWelcome()">Inicio</a></li>
+        <li><a onclick="showRegister()">Crer Cuenta</a></li>
+        <li><a onclick="showLogin()">Iniciar sesión</a></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="izq">
+        <div class="container" id="main">
+          <p>
+            Esta página web esta dirigada a los administradores del Hostal Royal
+            Princess. Por favor ingresa tus datos que fueron se le fueron
+            proporcionados, en caso contrario crea tu cuenta en el apartado
+            Crear Cuenta.
+          </p>
+          <br />
+          <p>El sistema fué desarrollado usando estas tecnologías:</p>
+          <ul>
+            <li>HTML y CSS</li>
+            <li>Perl para el backend</li>
+            <li>MariaDB para la base de datos</li>
+            <li>Javascript para el frontend</li>
+          </ul>
+        </div>
+      </div>
+      <div class="der">
+        <div class="container">
+          <h2>Integrantes</h2>
+          <br>
+          <ul>
+            <li>Aguilar Tancayo, Edwin Francisco</li>
+            <li>Cáceres Apaza, Jherald Huren</li>
+            <li>Huayhua Mayta, Ivan Rodrigo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Todos los derechos reservados &copy</p>
+    </footer>
   </body>
 </html>
