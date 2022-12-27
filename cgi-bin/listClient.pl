@@ -11,7 +11,7 @@ my @country;
 my @isHere;
 
 my $q = CGI -> new;
-print $q->header('text/xml;charset=UTF-8');y
+print $q->header('text/xml;charset=UTF-8');
 
 sub CheckClient {
 
@@ -66,17 +66,24 @@ sub showClient {
 
   my @body;
 
-  if(defined(@first)){
-    for(my $i = 0; $i<@first; $i++){
-      $body[$i] = <<XML;
-      <clients>
-        <firstname>$first[$i]</firstname>
-        <lasname>$las[$i]</lastname>
-        <dni>$dni[$i]</dni>
-        <country>$country[$i]</country>
-        <ishere>$isHere[$i]</ishere>
-      </clients>
-    }
-
+  for(my $i = 0; $i<@first; $i++){
+    $body[$i] = <<XML;
+    <client>
+      <firstname>$first[$i]</firstname>
+      <lasname>$las[$i]</lastname>
+      <dni>$dni[$i]</dni>
+      <country>$country[$i]</country>
+      <ishere>$isHere[$i]</ishere>
+    </client>
+XML
   }
+
+  return @body;
+}
+
+sub showTag {
+ my @show = @_; 
+ print <<XML;
+ <clients>\n@show </clients>
+XML
 }
