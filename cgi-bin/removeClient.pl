@@ -26,7 +26,7 @@ sub deleteClient{
 
   my $user = 'alumno';
   my $password = 'pweb1';
-  my $dsn = 'DBI:MariaDB:database=pweb1;host=192.168.0.11';
+  my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
   my $sql = "DELETE FROM Clients WHERE dni=?";
@@ -41,7 +41,7 @@ sub checkDNI{
 
   my $user = 'alumno';
   my $password = 'pweb1';
-  my $dsn = 'DBI:MariaDB:database=pweb1;host=192.168.0.11';
+  my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
   my $sql = "SELECT * FROM Clients  WHERE dni=?";

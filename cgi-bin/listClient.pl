@@ -47,7 +47,6 @@ sub CheckClient {
   while (my @row = $sth->fetchrow_array){
    $country[$i]=$row[0];
   }
-
   my $sql = "SELECT isHere FROM Clients";
   my $sth = $dbh->prepare($sql);
   $sth->execute();
@@ -69,8 +68,8 @@ sub showClient {
   for(my $i = 0; $i<@first; $i++){
     $body[$i] = <<XML;
     <client>
-      <firstname>$first[$i]</firstname>
-      <lastname>$las[$i]</lastname>
+      <firstName>$first[$i]</firstName>
+      <lasteame>$last[$i]</lastName>
       <dni>$dni[$i]</dni>
       <country>$country[$i]</country>
       <ishere>$isHere[$i]</ishere>

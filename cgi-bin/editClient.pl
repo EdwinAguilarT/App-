@@ -30,7 +30,7 @@ sub checkDNI{
 
   my $user = 'alumno';
   my $password = 'pweb1';
-  my $dsn = 'DBI:MariaDB:database=pweb1;host=192.168.0.11';
+  my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
   my $sql = "SELECT * FROM Clients WHERE dni=?";
@@ -50,7 +50,7 @@ sub updateComponents{
 
   my $user = 'alumno';
   my $password = 'pweb1';
-  my $dsn = 'DBI:MariaDB:database=pweb1;host=192.168.0.11';
+  my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
   my $sql = "UPDATE Clients SET firstName=? AND lastName=? AND country=? WHERE dni=?";
@@ -65,9 +65,9 @@ sub showTag{
   if(@rowQuery){
     print<<XML;
     <CLient>
-      <dni>$rowQuery[0]</dni>
       <firstName>$rowQuery[1]</firstName>
       <lastName>$rowQuery[2]</text>i
+      <dni>$rowQuery[0]</dni>
       <country>$rowQuery[3]</country>
     </client>
 XML
