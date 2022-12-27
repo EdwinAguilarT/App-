@@ -18,7 +18,15 @@ function showaddClient(){
 }
 
 function doaddClient(){
-  let firstName  
+  let firstName = document.getElementById('firstName').value;  
+  let lastName = document.getElementById('lastName').value;  
+  let dni = document.getElementById('dni').value;  
+  let country = document.getElementById('country').value;  
+
+  if(firstName && lastName && dni && country){
+    var url = "cgi-bin/addClient.pl?"
+  }
+
 
 }
 
