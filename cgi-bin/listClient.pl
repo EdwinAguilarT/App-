@@ -70,7 +70,7 @@ sub showClient {
     $body[$i] = <<XML;
     <client>
       <firstname>$first[$i]</firstname>
-      <lasname>$las[$i]</lastname>
+      <lastname>$las[$i]</lastname>
       <dni>$dni[$i]</dni>
       <country>$country[$i]</country>
       <ishere>$isHere[$i]</ishere>
