@@ -1,6 +1,7 @@
 var userKey = ' ';
 
 function showWelcome(){
+    document.getElementById("error").className = "noerror"; 
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
     <h2>Bienvenido `+ userKey +`</h2>
     <br>
@@ -39,6 +40,7 @@ function showMenuUserLogged(){
 }
 
 function showRegister(){
+    document.getElementById("error").className = "noerror"; 
   let html = `
   <h1>Registro</h1>
   <hr size="8px" color="black"><br>
@@ -72,6 +74,7 @@ function checkRegister() {
 
 function doRegister(user, passw) {
   if(user && passw){
+    document.getElementById("error").className = "noerror"; 
     var url = "cgi-bin/register.pl?user="+user+"&password="+passw;
     var promise = fetch(url);
     promise.then(response => response.text())
@@ -82,11 +85,13 @@ function doRegister(user, passw) {
       console.log('Error:', error);
     });
   }else{
-    document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Ingrese los datos correctamente</h1>";
+    document.getElementById("error").textContent = "Ingrese los datos correctament";
+    document.getElementById("error").className = "error"; 
   }
 }
 
 function showLogin(){
+    document.getElementById("error").className = "noerror"; 
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Login</h1>
   <hr size="8px" color="black"><br>
@@ -109,6 +114,7 @@ function doLogin(){
   let pass = document.getElementById('password').value;
 
   if(name && pass){
+    document.getElementById("error").className = "noerror";
     var url = "cgi-bin/login.pl?user="+name+"&password="+pass;
     var promise = fetch(url);
     promise.then(response => response.text())
@@ -119,25 +125,30 @@ function doLogin(){
       console.log('Error:', error);
     });
   }else{
-    document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Ingrese los datos correctamente</h1>";
+    document.getElementById("error").textContent = "Datos no válidos";
+    document.getElementById("error").className = "error";
   }
 }
 
 function responseLogin(xml){
   if(xml.getElementsByTagName('admin')[0]){
+    document.getElementById("error").className = "noerror";
     userKey = xml.childNodes[0].childNodes[1].textContent;
     showLoginSuccess();
   }else{
-    document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Datos erróneos</h1>";
+    document.getElementById("error").textContent = "Datos no válidos";
+    document.getElementById("error").className = "error";
   }
 }
 
 function showLoginSuccess(){
+    document.getElementById("error").className = "noerror"; 
   showWelcome();
   showMenuUserLogged();
 }
 
 function showaddClient(){
+    document.getElementById("error").className = "noerror"; 
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Nuevo cliente</h1>
   <hr size="8px" color="black" style="margin-bottom: 35px;"><br>
@@ -159,6 +170,7 @@ function showaddClient(){
 }
 
 function doaddClient(){
+  document.getElementById("error").className = "noerror"; 
   let firstName = document.getElementById('firstName').value;  
   let lastName = document.getElementById('lastName').value;  
   let dni = document.getElementById('dni').value;  
@@ -166,6 +178,7 @@ function doaddClient(){
   let isHere = document.getElementById('isHere').value;
 
   if(firstName && lastName && dni && country && isHere){
+    document.getElementById("error").className = "noerror";
     var url = "cgi-bin/addClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&country="+country+"&isHere="+isHere;
     var promise = fetch(url);
     promise.then(response => response.text())
@@ -176,7 +189,8 @@ function doaddClient(){
       console.log('Error:', error);
     });
   } else{
-    document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Ingrese los datos correctamente</h1>";
+    document.getElementById("error").textContent = "Ingrese los datos correctamente";
+    document.getElementById("error").className = "error";
   }
 }
 
@@ -189,6 +203,7 @@ function responseAddClient(response){
   let isHere = response.childNodes[0].childNodes[9].textContent;
 
   if(typeof firstName != 'undefined' && typeof lastName != 'undefined') {
+    document.getElementById("error").className = "noerror";
     let html ="<h1>Cliente agregado/modificado correctamente</h1>\n" +"<h2>Nombre: " + firstName + "</h2>";
     html += "<h2>Apellido: " + lastName + "</h2>";
     html += "<h2>DNI: " + dni + "</h2>";
@@ -196,7 +211,8 @@ function responseAddClient(response){
     html += "<h2>¿Está aquí?: " + isHere + "</h2>";
     document.getElementById("main").innerHTML = html;
   } else {
-    document.getElementById("error").innerHTML = "<h1 style=background-color:red; color:white>Datos erróneos</h1>"
+    document.getElementById("error").textContent = "Ingrese los datos correctamente";
+    document.getElementById("error").className = "error";
   }
 }
 
@@ -271,6 +287,7 @@ function doUpdate(dni){
 }
 
 function doList(){
+    document.getElementById("error").className = "noerror"; 
   var url = "cgi-bin/listClient.pl";
   var promise = fetch(url);
   promise.then(response => response.text())
@@ -283,6 +300,8 @@ function doList(){
 }
 
 function showList(response) {
+    document.getElementById("error").className = "noerror"; 
+
   if(response.getElementsByTagName('dni')[0]){
     let client = response.getElementsByTagName('client');
     let firstName = response.getElementsByTagName('firstName');
@@ -312,7 +331,10 @@ function showList(response) {
     html += "</table>";
     document.getElementById('main').innerHTML = html;
   }else{
-    document.getElementById('main').innerHTML = "<h1 style=color:red;>No existe clientes.</h1>";
+    let html = "<h1></h1>";
+    document.getElementById('main').innerHTML = html;
+    document.getElementById("error").textContent = "No existen clientes";
+    document.getElementById("error").className = "error";
   }
 }
 
