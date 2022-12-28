@@ -57,14 +57,14 @@ sub showTag{
   my $dniQuery = $_[0];
   if(defined($dniQuery)){
   print <<XML;
-  <Client>
+  <client>
     <dni>$dni</dni>
-  </Client>
+  </client>
 XML
   }else{
   print<<XML;
-  <Client>
-  </Client>
+  <client>
+  </client>
 XML
   }
 }

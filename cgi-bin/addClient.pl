@@ -12,10 +12,11 @@ my $first = $q->param('firstName');
 my $last = $q->param('lastName');
 my $dni = $q->param('dni');
 my $country = $q->param('country');
+my $isHere = $q->param('isHere');
 
-if(defined($first) and defined($last) and defined($dni) and defined($country)){
-    InsertClient($first,$last,$dni,$country);
-    successInsert($first,$last,$dni,$country);
+if(defined($first) and defined($last) and defined($dni) and defined($country) and defined($isHere)){
+    InsertClient($first,$last,$dni,$country,$isHere);
+    successInsert($first,$last,$dni,$country,$isHere);
 }else{
   showNewClient();
 }
@@ -25,6 +26,7 @@ sub InsertClient{
   my $lastQuery = $_[1];
   my $dniQuery = $_[2];
   my $countryQuery = $_[3];
+  my $isHereQuery = $_[4];
 
   my $user = 'alumno';
   my $password = 'pweb1';
@@ -33,7 +35,7 @@ sub InsertClient{
 
   my $sql = "INSERT INTO Clients VALUES (?,?,?,?,?)";
   my $sth = $dbh->prepare($sql);
-  $sth->execute($firstQuery, $lastQuery, $dniQuery, $countryQuery, 1);
+  $sth->execute($firstQuery, $lastQuery, $dniQuery, $countryQuery, $isHereQuery);
   $sth->finish;
   $dbh->disconnect;
 }
@@ -43,6 +45,7 @@ sub successInsert{
   my $lastQuery = $_[1];
   my $dniQuery = $_[2];
   my $countryQuery = $_[3];
+  my $isHereQuery = $_[4];
 
   print <<XML;
   <client>
@@ -50,6 +53,7 @@ sub successInsert{
     <lastName>$lastQuery</lastName>
     <dni>$dniQuery</dni>
     <country>$countryQuery</country>
+    <isHere>$isHereQuery</isHere>
   </client>
 XML
 }

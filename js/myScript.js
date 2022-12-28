@@ -41,6 +41,7 @@ function showMenuUserLogged(){
 function showRegister(){
   let html = `
   <h1>Registro</h1>
+  <hr size="8px" color="black"><br>
   <div class="login">
       <div class="form">
         <form>
@@ -88,6 +89,7 @@ function doRegister(user, passw) {
 function showLogin(){
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Login</h1>
+  <hr size="8px" color="black"><br>
   <div class="login">
       <div class="form">
         <form class="registro">
@@ -138,6 +140,7 @@ function showLoginSuccess(){
 function showaddClient(){
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Nuevo cliente</h1>
+  <hr size="8px" color="black" style="margin-bottom: 35px;"><br>
   <div class="form">
     <h2>Usuario: `+userKey+`</h2>
     <br>
@@ -145,6 +148,7 @@ function showaddClient(){
     <input placeholder="Apellido..." type="text" id="lastName">
     <input placeholder="Dni..." type="text" id="dni">
     <input placeholder="País..." type="text" id="country">
+    <input placeholder="¿Está aquí?..." type="text" id="isHere">
     <input class="input" style="color:black;" type="submit" onclick="doaddClient()" value="Crear">
     <input class="input" style="color:black;" type="submit" onclick="doList()" value="Cancelar">
   </div>
@@ -159,9 +163,10 @@ function doaddClient(){
   let lastName = document.getElementById('lastName').value;  
   let dni = document.getElementById('dni').value;  
   let country = document.getElementById('country').value;  
+  let isHere = document.getElementById('isHere').value;
 
-  if(firstName && lastName && dni && country){
-    var url = "cgi-bin/addClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&country="+country;
+  if(firstName && lastName && dni && country && isHere){
+    var url = "cgi-bin/addClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&country="+country+"&isHere="+isHere;
     var promise = fetch(url);
     promise.then(response => response.text())
       .then(data => {
@@ -175,17 +180,20 @@ function doaddClient(){
   }
 }
 
-function responseAddClient(xml){
-  let firstName = xml.childNodes[0].childNodes[1].textContent;
-  let lastName = xml.childNodes[0].childNodes[3].textContent;
-  let dni = xml.childNodes[0].childNodes[5].textContent;
-  let country = xml.childNodes[0].childNodes[7].textContent;
+function responseAddClient(response){
+  sml = response;
+  let firstName = response.childNodes[0].childNodes[1].textContent;
+  let lastName = response.childNodes[0].childNodes[3].textContent;
+  let dni = response.childNodes[0].childNodes[5].textContent;
+  let country = response.childNodes[0].childNodes[7].textContent;
+  let isHere = response.childNodes[0].childNodes[9].textContent;
 
-  if(firstName) {
-    let html ="<h1>Cliente agregado correctamente</h1>\n" +"<h2>Nombre: " + firstName + "</h2>";
+  if(typeof firstName != 'undefined' && typeof lastName != 'undefined') {
+    let html ="<h1>Cliente agregado/modificado correctamente</h1>\n" +"<h2>Nombre: " + firstName + "</h2>";
     html += "<h2>Apellido: " + lastName + "</h2>";
     html += "<h2>DNI: " + dni + "</h2>";
     html += "<h2>País: " + country + "</h2>";
+    html += "<h2>¿Está aquí?: " + isHere + "</h2>";
     document.getElementById("main").innerHTML = html;
   } else {
     document.getElementById("error").innerHTML = "<h1 style=background-color:red; color:white>Datos erróneos</h1>"
@@ -226,6 +234,7 @@ function respondEditClient(xml) {
 
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Actualizar a cliente</h1>
+  <hr size="8px" color="black"><br>
   <br>
   <div class="form">
     <input type="text" id="firstNameUpdate" name="firstNameUpdate" value=`+ firstName +`>
@@ -244,17 +253,18 @@ function doUpdate(dni){
 
   let firstName = firstNameUpdate.value;
   let lastName = lastNameUpdate.value;
-  let dni1 = dniUpdate.value;
+  let newdni = dniUpdate.value;
   let country = countryUpdate.value;
   let isHere = isHereUpdate.value;
 
-  var url = "cgi-bin/editClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni1="+dni+"&country="+country+"&isHere="+isHere;
+  var url = "cgi-bin/editClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&dni2="+newdni+"&country="+country+"&isHere="+isHere;
   var promise = fetch(url);
   promise.then(response => response.text())
     .then(data => {
       console.log(data);
-      var html = (new window.DOMParser()).parseFromString(data, "text/html");
-      responseAddClient(html);
+      var xml = (new window.DOMParser()).parseFromString(data, "text/xml");
+      console.log(xml);
+      responseAddClient(xml);
   }).catch(error => {
     console.log('Error:', error);
   });

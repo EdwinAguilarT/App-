@@ -11,13 +11,14 @@ my @row;
 my $first = $q->param('firstName');
 my $last = $q->param('lastName');
 my $dni = $q->param('dni');
+my $dni2 = $q->param('dni2');
 my $country = $q->param('country');
 my $isHere = $q->param('isHere');
 
-if(defined($first) and defined($last) and defined($dni) and defined($country) and defined($isHere)){
+if(defined($first) and defined($last) and defined($dni) and defined($dni2) and defined($country) and defined($isHere)){
   if(checkClient($dni)){
-    updateComponents($dni, $first, $last, $country, $isHere);
-    checkClient($dni);
+    updateComponents($dni, $first, $last, $dni2, $country, $isHere);
+    checkClient($dni2);
     showTag(@row);
   }else{
     showTag();
@@ -47,17 +48,18 @@ sub updateComponents{
   my $dniQuery = $_[0];
   my $firstQuery = $_[1];
   my $lastQuery = $_[2];
-  my $countryQuery = $_[3];
-  my $isHereQuery = $_[4];
+  my $dni2Query = $_[3];
+  my $countryQuery = $_[4];
+  my $isHereQuery = $_[5];
 
   my $user = 'alumno';
   my $password = 'pweb1';
   my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
-  my $sql = "UPDATE Clients SET firstName=?, lastName=?, country=?, isHere=? WHERE dni=?";
+  my $sql = "UPDATE Clients SET firstName=?, lastName=?, dni=?, country=?, isHere=? WHERE dni=?";
   my $sth = $dbh->prepare($sql);
-  $sth->execute($firstQuery, $lastQuery, $countryQuery, $isHereQuery, $dniQuery);
+  $sth->execute($firstQuery, $lastQuery, $dni2Query, $countryQuery, $isHereQuery, $dniQuery);
   $sth->finish;
   $dbh->disconnect;
 }
@@ -65,14 +67,14 @@ sub updateComponents{
 sub showTag{
   my @rowQuery = @_;
   if(@rowQuery){
-    print<<XML;
-    <client>
-      <firstName>$rowQuery[0]</firstName>
-      <lastName>$rowQuery[1]</text>
-      <dni>$rowQuery[2]</dni>
-      <country>$rowQuery[3]</country>
-      <isHere>$rowQuery[4]</isHere>
-    </client>
+  print<<XML;
+  <client>
+    <firstName>$rowQuery[0]</firstName>
+    <lastName>$rowQuery[1]</lastName>
+    <dni>$rowQuery[2]</dni>
+    <country>$rowQuery[3]</country>
+    <isHere>$rowQuery[4]</isHere>
+  </client>
 XML
   }else{
     print<<XML;
