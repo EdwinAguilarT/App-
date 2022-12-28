@@ -12,7 +12,7 @@ my $password = $q->param('password');
 
 if(defined($user) and defined($password)){
   Register($user,$password);
-  succesRegister();
+  successRegister();
 }else{
   ShowRegister();
 }

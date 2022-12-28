@@ -13,8 +13,26 @@ my @isHere;
 my $q = CGI -> new;
 print $q->header('text/xml;charset=UTF-8');
 
-sub CheckClient {
+CheckClient();
+print <<XML;
+<clients>
+XML
+foreach my $number (0..$#firstName){
+  print <<XML;
+  <client>
+    <firstName>$firstName[$number]</firstName>
+    <lastName>$lastName[$number]</lastName>
+    <dni>$dni[$number]</dni>
+    <country>$country[$number]</country>
+    <isHere>$isHere[$number]</isHere>
+  </client>
+XML
+}
+print <<XML;
+</clients>
+XML
 
+sub CheckClient {
   my $user = 'alumno';
   my $password = 'pweb1';
   my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
@@ -22,67 +40,45 @@ sub CheckClient {
 
   my $sql = "SELECT firstName FROM Clients";
   my $sth = $dbh->prepare($sql);
-  $sth->execute();
+  $sth->execute(); 
+  my $i = 0;
   while (my @row = $sth->fetchrow_array){
    $firstName[$i]=$row[0];
+   $i++;
   }
   
-  my $sql = "SELECT lastName FROM Clients";
-  my $sth = $dbh->prepare($sql);
+  $sql = "SELECT lastName FROM Clients";
+  $sth = $dbh->prepare($sql);
   $sth->execute();
+  $i = 0;
   while (my @row = $sth->fetchrow_array){
    $lastName[$i]=$row[0];
+   $i++;
   }
 
-  my $sql = "SELECT dni FROM Clients";
-  my $sth = $dbh->prepare($sql);
+  $sql = "SELECT dni FROM Clients";
+  $sth = $dbh->prepare($sql);
   $sth->execute();
+  $i = 0;
   while (my @row = $sth->fetchrow_array){
    $dni[$i]=$row[0];
+   $i++;
   }
 
-  my $sql = "SELECT country FROM Clients";
-  my $sth = $dbh->prepare($sql);
+  $sql = "SELECT country FROM Clients";
+  $sth = $dbh->prepare($sql);
   $sth->execute();
+  $i = 0;
   while (my @row = $sth->fetchrow_array){
    $country[$i]=$row[0];
+   $i++;
   }
-  my $sql = "SELECT isHere FROM Clients";
-  my $sth = $dbh->prepare($sql);
+  $sql = "SELECT isHere FROM Clients";
+  $sth = $dbh->prepare($sql);
   $sth->execute();
+  $i = 0;
   while (my @row = $sth->fetchrow_array){
    $isHere[$i]=$row[0];
+   $i++;
   }
-
-}
-
-sub showClient {
-  my @first = $_[0];
-  my @last = $_[1];
-  my @dni = $_[2];
-  my @country = $_[3];
-  my @isHere = $_[4]; 
-
-  my @body;
-
-  for(my $i = 0; $i<@first; $i++){
-    $body[$i] = <<XML;
-    <client>
-      <firstName>$first[$i]</firstName>
-      <lasteame>$last[$i]</lastName>
-      <dni>$dni[$i]</dni>
-      <country>$country[$i]</country>
-      <ishere>$isHere[$i]</ishere>
-    </client>
-XML
-  }
-
-  return @body;
-}
-
-sub showTag {
- my @show = @_; 
- print <<XML;
- <clients>\n@show </clients>
-XML
 }

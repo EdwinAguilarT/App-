@@ -31,9 +31,9 @@ sub InsertClient{
   my $dsn = 'DBI:MariaDB:database=pweb1;host=localhost';
   my $dbh = DBI->connect($dsn, $user, $password) or die("No se pudo conectar!");
 
-  my $sql = "INSERT INTO Clients VALUES (?,?,?,?)";
+  my $sql = "INSERT INTO Clients VALUES (?,?,?,?,?)";
   my $sth = $dbh->prepare($sql);
-  $sth->execute($firstQuery, $lastQuery, $dniQuery, $countryQuery);
+  $sth->execute($firstQuery, $lastQuery, $dniQuery, $countryQuery, 1);
   $sth->finish;
   $dbh->disconnect;
 }
@@ -45,19 +45,19 @@ sub successInsert{
   my $countryQuery = $_[3];
 
   print <<XML;
-  <Client>
+  <client>
     <firstName>$firstQuery</firstName>
     <lastName>$lastQuery</lastName>
     <dni>$dniQuery</dni>
     <country>$countryQuery</country>
-  </Client>
+  </client>
 XML
 }
 
 sub showNewClient{
   print <<XML;
-  <Client>
-  </Client>
+  <client>
+  </client>
 XML
 }
 

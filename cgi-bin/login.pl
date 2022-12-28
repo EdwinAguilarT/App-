@@ -50,7 +50,7 @@ XML
 sub successLogin{
 print <<XML;
 <user>
-  <owner>$row[0]</owner>
+  <admin>@row[0]</admin>
 </user>
 XML
 }
