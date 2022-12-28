@@ -1,5 +1,9 @@
+var userKey = ' ';
+
 function showWelcome(){
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
+    <h2>Bienvenido `+ userKey +`</h2>
+    <br>
     <p>
     Esta página web esta dirigida a los administradores del Hostal Royal
     Princess. Por favor ingresa tus datos que fueron se le fueron
@@ -15,17 +19,70 @@ function showWelcome(){
       <li>Javascript para el frontend</li>
     </ul>
   `;
+  document.getElementById('main').innerHTML = html;
 }
 
 function showMenuUserLogged(){
-  let html = "<a onclick='showWelcome()'>Inicio</a>\n"+
-    "<a onclick='doList()'>Clientes listados</a>\n"+
-    "<a onclick='showNew()' class='rigthAlign'>Nuevo Cliente</a>\n"
+  let html = `<ul>
+    <li>
+      <a onclick='showWelcome()'>Inicio</a>
+    </li>
+    <li>
+      <a onclick='doList()'>Clientes listados</a>
+    </li>
+    <li>
+      <a onclick='showaddClient()' class='rigthAlign'>Nuevo Cliente</a>
+    </li>
+    </ul>
+    `;
   document.getElementById('menu').innerHTML = html;
 }
 
 function showRegister(){
+  let html = `
+  <h1>Registro</h1>
+  <div class="login">
+      <div class="form">
+        <form>
+          <input type="text" placeholder="Usuario..." name="user" id="user" required=""><br>
+          <input type="password" placeholder="Contraseña..." name="password" id="password" required=""><br>
+          <input type="password" placeholder="Confirmar contraseña..." name="password2" id="password2" required=""><br>
+          <a class="input" onclick='checkRegister()'>Registrarse</a>
+        </form>
+      </div>
+    </div>
+  `;
+  document.getElementById('main').innerHTML = html;
+}
 
+function checkRegister() {
+  let user = document.getElementById("user").value;
+  let password = document.getElementById("password").value;
+  let password2 = document.getElementById("password2").value;  
+
+  if (password == password2) {
+    document.getElementById("error").className = "noerror"
+    doRegister(user, password);    
+  } else {
+    document.getElementById("error").textContent = "Las contraseñas no coinciden";
+    document.getElementById("error").className = "error"; 
+  } 
+}
+
+function doRegister(user, passw) {
+  if(user && passw){
+    var url = "cgi-bin/register.pl?user="+user+"&password="+passw;
+    var promise = fetch(url);
+    promise.then(response => response.text())
+      .then(data => {
+        var xml = (new window.DOMParser()).parseFromString(data, "text/xml");
+        responseLogin(xml);
+    }).catch(error => {
+      console.log('Error:', error);
+    });
+  }else{
+    document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Ingrese los datos correctamente</h1>";
+  }
 }
 
 function showLogin(){
@@ -33,11 +90,10 @@ function showLogin(){
   <h1>Login</h1>
   <div class="login">
       <div class="form">
-        <form class="registro" action="./cgi-bin/login.pl" method="POST">
+        <form class="registro">
           <input type="text" placeholder="Usuario..." name="user" id="user" required=""><br>
           <input type="password" placeholder="Contraseña..." name="password" id="password" required=""><br>
-          <input type="submit" value="Ingresar">
-          <p class="message">¿No estas registrado? <a href="register.html">Crear una cuenta</a></p>
+          <a class="input" onclick='doLogin()'>Ingresar</a>
         </form>
       </div>
     </div>  
@@ -56,7 +112,7 @@ function doLogin(){
     promise.then(response => response.text())
       .then(data => {
         var xml = (new window.DOMParser()).parseFromString(data, "text/xml");
-        loginResponse(xml);
+        responseLogin(xml);
     }).catch(error => {
       console.log('Error:', error);
     });
@@ -67,7 +123,7 @@ function doLogin(){
 
 function responseLogin(xml){
   if(xml.getElementsByTagName('admin')[0]){
-    userKey = xml.getElementByTagName('admin')[0].textContent;
+    userKey = xml.childNodes[0].childNodes[1].textContent;
     showLoginSuccess();
   }else{
     document.getElementById('error').innerHTML = "<h1 style=color:#1ab188;background-color:red;padding:40px;>Datos erróneos</h1>";
@@ -75,7 +131,6 @@ function responseLogin(xml){
 }
 
 function showLoginSuccess(){
-  document.getElementById('userName').innerHTML = userKey;
   showWelcome();
   showMenuUserLogged();
 }
@@ -84,19 +139,19 @@ function showaddClient(){
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Nuevo cliente</h1>
   <div class="form">
-    <h2>Usuario: `+userKey+`< /h2>
+    <h2>Usuario: `+userKey+`</h2>
     <br>
     <input placeholder="Nombre..." type="text" id="firstName">
     <input placeholder="Apellido..." type="text" id="lastName">
     <input placeholder="Dni..." type="text" id="dni">
     <input placeholder="País..." type="text" id="country">
-    <input type="submit" onclick="doaddClient()" value="Crear">
-    <input type="submit" onclick="dolistClient()" value="Cancelar">
+    <input class="input" style="color:black;" type="submit" onclick="doaddClient()" value="Crear">
+    <input class="input" style="color:black;" type="submit" onclick="doList()" value="Cancelar">
   </div>
   <div id="error">
   </div>
-  ` 
-  ;
+  `;
+  document.getElementById('main').innerHTML = html;
 }
 
 function doaddClient(){
@@ -106,7 +161,7 @@ function doaddClient(){
   let country = document.getElementById('country').value;  
 
   if(firstName && lastName && dni && country){
-    var url = "cgi-bin/addClient.pl?firstName?="+firstName+"&lastName="+lastName+"&dni="+dni+"&country"+country;
+    var url = "cgi-bin/addClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&country="+country;
     var promise = fetch(url);
     promise.then(response => response.text())
       .then(data => {
@@ -120,17 +175,17 @@ function doaddClient(){
   }
 }
 
-function responseAddClient(response){
-  let firstName = response.getElementByTagName("firstName")[0];
-  let lastName = response.getElementByTagName("lastName")[0];
-  let dni = response.getElementByTagName("dni")[0];
-  let country = response.getElementByTagName("country")[0];
+function responseAddClient(xml){
+  let firstName = xml.childNodes[0].childNodes[1].textContent;
+  let lastName = xml.childNodes[0].childNodes[3].textContent;
+  let dni = xml.childNodes[0].childNodes[5].textContent;
+  let country = xml.childNodes[0].childNodes[7].textContent;
 
-  if(response.getElementByTagName("firstName")) {
-    let html = "<h2>" + firstName.textContent + "</h2>";
-    html += "<h2>" + lastName.textContent + "</h2>";
-    html += "<h2>" + dni.textContent + "</h2>";
-    html += "<h2>" + country.textContent + "</h2>";
+  if(firstName) {
+    let html ="<h1>Cliente agregado correctamente</h1>\n" +"<h2>Nombre: " + firstName + "</h2>";
+    html += "<h2>Apellido: " + lastName + "</h2>";
+    html += "<h2>DNI: " + dni + "</h2>";
+    html += "<h2>País: " + country + "</h2>";
     document.getElementById("main").innerHTML = html;
   } else {
     document.getElementById("error").innerHTML = "<h1 style=background-color:red; color:white>Datos erróneos</h1>"
@@ -142,7 +197,7 @@ function doremoveClient(dni){
   var promise = fetch(url);
   promise.then(response => response.text())
     .then(data => {
-      dolistClient();
+      doList();
   }).catch(error => {
     console.log('Error:', error);
   });
@@ -154,21 +209,24 @@ function doeditClient(dni){
   promise.then(response => response.text())
     .then(data => {
       var xml = (new window.DOMParser()).parseFromString(data, "text/xml");
-      respondeEditClient(xml);
+      respondEditClient(xml);
   }).catch(error => {
     console.log('Error:', error);
   }); 
 }
 
-function respondEditClient(response) {
-  let firstName = response.getElementByTagName("firstName")[0].textContent;
-  let lastName = response.getElementByTagName("lastName")[0].textContent;
-  let dni = response.getElementByTagName("dni")[0].textContent;
-  let country = response.getElementByTagName("country")[0].textContent;
-  let isHere = response.getElementByTagName("isHere")[0].textContent;
+function respondEditClient(xml) {
+  response = xml;
+
+  let firstName = xml.childNodes[0].childNodes[1].textContent;
+  let lastName = xml.childNodes[0].childNodes[3].textContent;
+  let dni = xml.childNodes[0].childNodes[5].textContent;
+  let country = xml.childNodes[0].childNodes[7].textContent;
+  let isHere = xml.childNodes[0].childNodes[9].textContent;
 
   let html = `<link rel="stylesheet" type="text/css" href="css/style.css">
   <h1>Actualizar a cliente</h1>
+  <br>
   <div class="form">
     <input type="text" id="firstNameUpdate" name="firstNameUpdate" value=`+ firstName +`>
     <input type="text" id="lastNameUpdate" name="lastNameUpdate" value=`+ lastName +`>
@@ -176,7 +234,7 @@ function respondEditClient(response) {
     <input type="text" id="countryUpdate" name="countryUpdate" value=`+ country +`>
     <input type="text" id="isHereUpdate" name="isHereUpdate" value=`+ isHere +`>
     <br>
-    <input type="submit" value="Actualizar"  onclick="doUpdate(`+dni+`)">
+    <input class="input" style="color:black;" type="submit" value="Actualizar"  onclick="doUpdate(`+dni+`)">
   </div>
   `;
   document.getElementById('main').innerHTML = html;
@@ -186,11 +244,11 @@ function doUpdate(dni){
 
   let firstName = firstNameUpdate.value;
   let lastName = lastNameUpdate.value;
-  let dni = dniUpdate.value;
+  let dni1 = dniUpdate.value;
   let country = countryUpdate.value;
   let isHere = isHereUpdate.value;
 
-  var url = "cgi-bin/editClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni="+dni+"&country="+country+"&isHere="+isHere;
+  var url = "cgi-bin/editClient.pl?firstName="+firstName+"&lastName="+lastName+"&dni1="+dni+"&country="+country+"&isHere="+isHere;
   var promise = fetch(url);
   promise.then(response => response.text())
     .then(data => {
@@ -216,7 +274,6 @@ function doList(){
 
 function showList(response) {
   if(response.getElementsByTagName('dni')[0]){
-    console.log("Error");
     let client = response.getElementsByTagName('client');
     let firstName = response.getElementsByTagName('firstName');
     let lastName = response.getElementsByTagName('lastName');
@@ -225,16 +282,24 @@ function showList(response) {
     let isHere = response.getElementsByTagName('isHere');
 
     let html = "<h1>Lista de Clientes</h1>";
-    html += `<hr size="8px" color="black">`;
+    html += `<hr size="8px" color="black"><br>`;
+    html += `<table class="table">
+    <tr>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>DNI</th>
+    <th>País</th>
+    <th>¿Está aquí?</th>
+    `;
     for(let i=0; i<client.length; i++){
       if(response.getElementsByTagName('firstName')[i].textContent){
-        console.log(title[i].textContent);
-        html += firstName.textContent+" "+lastName.textContent+" "+dni.textContent+" "+country.textContent+" "+isHere.textContent+`
-          <button class="buttonMini" onclick=doremoveClient("`+dni.textContent+`")>Eliminar Cliente</button>
-          <button class="buttonMini" onclick=doeditClient("`+dni.textContent+`")>Editar Cliente</button>
-          <br><br>`;
+        html +=`<tr>
+        `+`<td>`+firstName[i].textContent+"</td> <td>"+lastName[i].textContent+"</td> <td>"+dni[i].textContent+"</td> <td>"+country[i].textContent+"</td> <td>"+isHere[i].textContent+`</td>
+          <td><button class="input" onclick=doremoveClient("`+dni[i].textContent+`")>Eliminar Cliente</button>
+          <button class="input" onclick=doeditClient("`+dni[i].textContent+`")>Editar Cliente</button></td>`;
       }
     }
+    html += "</table>";
     document.getElementById('main').innerHTML = html;
   }else{
     document.getElementById('main').innerHTML = "<h1 style=color:red;>No existe clientes.</h1>";
